@@ -65,7 +65,18 @@ def SimulateStateOneParticle(numberOfSteps, eB, stopWhenRightStateReached):
         if particleState == 'right' and stopWhenRightStateReached:
             print('number of iterations: ', iStep) 
             return iStep
-               
+
+
+    # check if equilibrium reached 
+    countLeft = dataToPlot.count(0)
+    countRight = dataToPlot.count(2)
+
+    print(abs(countLeft - countRight))
+
+    if abs(countLeft - countRight) < numberOfSteps/100: 
+        print('equilibrium reached!')
+    else: 
+        print('equilibrium not reached.')
 
     if not stopWhenRightStateReached: 
         # plotting
@@ -80,7 +91,7 @@ def SimulateStateOneParticle(numberOfSteps, eB, stopWhenRightStateReached):
 
 
 
-# SimulateStateOneParticle(1000000, 2, False)
+# SimulateStateOneParticle(10000, 2, False)
 # exit()
 
 '''
