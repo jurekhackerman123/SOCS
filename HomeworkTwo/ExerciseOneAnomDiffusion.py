@@ -11,6 +11,14 @@ simulate the trajectories of a Brownian particle under three conditions:
 
 '''
 
+M = 1.11 * 10**-14
+T = 300
+R = 10**-3
+ETA = 0.001
+GAMMA = 6 * np.pi * ETA * R
+
+DT = 1
+
 
 def OverdampedBrownian(numSteps, T, dT, gamma):
 
@@ -31,7 +39,7 @@ def OverdampedBrownian(numSteps, T, dT, gamma):
     
     return arrayX, arrayY
 
-# testX, testY = OverdampedBrownian(100, 300, 1, 1e-10)
+# testX, testY = OverdampedBrownian(1000, T, 0.1, GAMMA)
 
 
 
@@ -56,11 +64,13 @@ def InertialBrownian(numSteps, T, dT, gamma, m):
 
 
 
-# testX, testY = InertialBrownian(100, 300, 1, 1e-10, 1e-14)
+
+
+# testX, testY = InertialBrownian(1000, T, 1, GAMMA, M)
 
 
 
-def TrappedBrownian(numSteps, T, dT, gamma, k): 
+def TrappedBrownian(numSteps, T, dT, gamma, kX, kY): 
 
     arrayX = np.zeros(numSteps)
     arrayY = np.zeros(numSteps)
@@ -70,21 +80,25 @@ def TrappedBrownian(numSteps, T, dT, gamma, k):
 
     for iCoord in range(1, numSteps): 
 
-        factorOne = k/gamma * dT
+        factorOneX = kX/gamma * dT
+        factorOneY = kY/gamma * dT
         factorTwo = np.sqrt(2*Boltzmann * T * dT / gamma)
 
-        arrayX[iCoord] = arrayX[iCoord - 1] - factorOne * arrayX[iCoord - 1] + factorTwo * np.random.normal(0, 1)        
-        arrayY[iCoord] = arrayY[iCoord - 1] - factorOne * arrayY[iCoord - 1] + factorTwo * np.random.normal(0, 1)
+        arrayX[iCoord] = arrayX[iCoord - 1] - factorOneX * arrayX[iCoord - 1] + factorTwo * np.random.normal(0, 1)        
+        arrayY[iCoord] = arrayY[iCoord - 1] - factorOneY * arrayY[iCoord - 1] + factorTwo * np.random.normal(0, 1)
 
     return arrayX, arrayY
 
+KX = 10**-5
+KY = 0.25 * 10**-5
+# testX, testY = TrappedBrownian(1000, T, 0.1, GAMMA, KX, KY)
 
-# testX, testY = TrappedBrownian(10, 300, 1, 1, 1)
+
 
 # plt.plot(testX, testY)
 # plt.scatter(testX[0], testY[0])
 # plt.show()
-
+# exit()
 
 def EMSD(BrownianFunction, numSteps, iterations): 
     
@@ -93,58 +107,61 @@ def EMSD(BrownianFunction, numSteps, iterations):
     for iIteration in range(iterations):
 
         if BrownianFunction == 'overdamped': 
-            arrayX, arrayY = OverdampedBrownian(numSteps, 300, 1, 1e-10)
+            arrayX, arrayY = OverdampedBrownian(numSteps, T, DT, GAMMA)
         elif BrownianFunction == 'inertial': 
-            arrayX, arrayY = InertialBrownian(numSteps, 300, 1, 1e-10, 1e-14)
+            arrayX, arrayY = InertialBrownian(numSteps, T, DT, GAMMA, M)
         elif BrownianFunction == 'trapped': 
-            arrayX, arrayY = TrappedBrownian(numSteps, 300, 1, 1, 1)
+            arrayX, arrayY = TrappedBrownian(numSteps, T, DT, GAMMA, KX, KY)
 
-        tempDistance = ( arrayX[-1] - arrayX[0] ) **2 + ( arrayY[-1] - arrayY[0] )**2
+        tempDistance = ( arrayX[-1] - arrayX[0] )**2 + ( arrayY[-1] - arrayY[0] )**2
 
         eMSD += tempDistance
+    
+    eMSD = eMSD/ (iterations * numSteps)
 
     return eMSD
 
-test = EMSD('overdamped', 100, 100)
-print(test)
 
 
-def TMSD(BrownianFunction, numSteps, numDisplacements):
 
-    lenInterval = int(numSteps / numDisplacements)
+def TMSD(BrownianFunction, numSteps, displacementFactor):
+
+    # lenInterval = int(numSteps / numDisplacements)
 
     # print('leninterval: ', lenInterval)
 
     if BrownianFunction == 'overdamped': 
-        arrayX, arrayY = OverdampedBrownian(numSteps, 300, 1, 1e-10)
+        arrayX, arrayY = OverdampedBrownian(numSteps, T, DT, GAMMA)
     elif BrownianFunction == 'inertial': 
-        arrayX, arrayY = InertialBrownian(numSteps, 300, 1, 1e-10, 1e-14)
+        arrayX, arrayY = InertialBrownian(numSteps, T, DT, GAMMA, M)
     elif BrownianFunction == 'trapped': 
-        arrayX, arrayY = TrappedBrownian(numSteps, 300, 1, 1, 1)
+        arrayX, arrayY = TrappedBrownian(numSteps, T, DT, GAMMA, KX, KY)
     else: 
         print('Error, no function given.')
         return
 
+    trajectoryLenght = len(arrayX)
 
     tMSD = 0
 
-    for i in range(numDisplacements):
+    print('DEBUDEBU')
+    print(trajectoryLenght - displacementFactor)
+
+    for i in range(trajectoryLenght - displacementFactor):
 
 
-        if i == (numDisplacements) - 1: 
-            # choose last element in list insted of i+1st 
-            tempDistance = (arrayX[i * lenInterval] - arrayX[-1])**2 + (arrayY[i * lenInterval] - arrayY[-1])**2
-        
-        else: 
-            tempDistance = (arrayX[i * lenInterval] - arrayX[(i+1) * lenInterval])**2 + (arrayY[i * lenInterval] - arrayY[(i+1) * lenInterval])**2
+        tempDistance = (arrayX[i] - arrayX[i + displacementFactor])**2 + (arrayY[i] - arrayY[i + displacementFactor])**2
 
         tMSD += tempDistance
+
+    tMSD = tMSD/((trajectoryLenght-displacementFactor) * displacementFactor)
 
     return tMSD
 
 
-
-test = TMSD('overdamped', 100, 10)
+test = EMSD('overdamped', 10, 100000)
 print(test)
+test2 = TMSD('overdamped', 100000, 11)
+print(test2)
 
         

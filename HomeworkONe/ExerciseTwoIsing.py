@@ -20,8 +20,6 @@ def InitializeLattice(size):
 
     return lattice
 
-# lattice = InitializeLattice(10)
-
 
 def UpdateMonteCarloOneAtom(lattice, i, j, H, J, T): 
     spinCurrent = lattice[i, j]
@@ -73,30 +71,33 @@ def UpdateMonteCarloOneAtom(lattice, i, j, H, J, T):
 def UpdateLattice(numberOfSteps, H, J, T): 
     lattice = InitializeLattice(200)
 
-    total_entries = 200*200
-    entries_to_choose = int(0.10 * total_entries)
+    totalElements = 200*200
+    elementsOfInterest = int(0.10 * totalElements)
 
     for iStep in range(numberOfSteps): 
 
         # Generate random indices without replacement
-        random_indices = np.random.choice(total_entries, entries_to_choose, replace=False)
+        randomIndices = np.random.choice(totalElements, elementsOfInterest, replace=False)
 
         # Now we have 10% of the data, and the indices of this data in the matrix
-        rowIndices, colIndices = np.unravel_index(random_indices, (200, 200))
+        rowIndices, colIndices = np.unravel_index(randomIndices, (200, 200))
 
         # for these indices, we now apply the montecarlo method 
-        for iElement in range(entries_to_choose): 
+        for iElement in range(elementsOfInterest): 
             lattice = UpdateMonteCarloOneAtom(lattice, rowIndices[iElement], colIndices[iElement], H, J, T)
 
     return lattice
 
 
+'''
+PLOTTING 2D MAP
+'''
 
-# lattice = UpdateLattice(10000, 1.1, 1, 5)
-# sns.heatmap(lattice, cmap='YlGnBu', annot=False)
-# plt.title('Number of steps: ' + str(10000))
-# plt.show()
-# exit()
+lattice = UpdateLattice(1000, 0, 1, 1)
+sns.heatmap(lattice, cmap='YlGnBu', annot=False)
+plt.title('Number of steps: ' + str(10000))
+plt.show()
+
 
 
 def CalculateMagnetization(lattice): 
@@ -107,6 +108,8 @@ def VariationMagnetization():
     this function varies the external magnetic field and thus measures the magnetization
     '''
     magnetizationList = []
+
+    # this list was to show that after approx. 0.8, the graph is not linear anymore
     # hList = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6]
     hList = [0,0.2, 0.4, 0.6, 0.8]
     for hValue in hList: 
@@ -120,17 +123,19 @@ def VariationMagnetization():
     xData = np.array(hList)
     yData = np.array(magnetizationList)
 
-    slope, intercept, r_value, p_value, std_err = linregress(xData, yData)
+
+    # use linregress from scipy to fit the line 
+    slope, intercept, rValue, pValue, stdErr = linregress(xData, yData)
 
     # Calculate the fitted values
-    fit_line = slope * xData + intercept
+    fittedMagnetization = slope * xData + intercept
 
     # Print the slope and intercept of the line
     print(f"Magnetization found: {slope}")
 
     # Plot the original data and the fitted line
     plt.scatter(xData, yData)
-    plt.plot(xData, fit_line, color='red')
+    plt.plot(xData, fittedMagnetization, color='red')
     plt.xlabel('External Magnetic Field H')
     plt.ylabel('Magnetization m')
     plt.title(f"Magnetization: {np.round(slope, 2)}")
@@ -138,4 +143,4 @@ def VariationMagnetization():
 
     return magnetizationList
 
-# magnetizationList = VariationMagnetization()
+magnetizationList = VariationMagnetization()

@@ -13,13 +13,15 @@ def SimulateStateOneParticle(numberOfSteps, eB, stopWhenRightStateReached):
     eB is given in units kB * T 
 
     '''
-    z = 2 + np.exp(-eB)
+    z = 1 + 2*np.exp(-eB)
 
     dictionary = {
         'left' : np.exp(-eB) / z,
         'middle' : 1 / z , 
         'right' : np.exp(-eB) / z
     }
+
+    print('Probabilities for left, middle and right state: ', dictionary['left'], dictionary['middle'], dictionary['right'])
 
     # initial condition
     particleState = 'left'
@@ -91,7 +93,7 @@ def SimulateStateOneParticle(numberOfSteps, eB, stopWhenRightStateReached):
 
 
 
-# SimulateStateOneParticle(10000, 2, False)
+# SimulateStateOneParticle(500000, 2, False)
 # exit()
 
 '''
