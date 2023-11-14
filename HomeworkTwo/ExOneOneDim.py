@@ -16,18 +16,15 @@ Do we have to recreate the plots?
 HOw do times and number of steps relate? 
 
 
-To what extent can we use the example code? 
+
 
 '''
 
 M = 1.11 * 10**-14
 T = 300
-R = 10**-6
+R = 10**-3
 ETA = 0.001
 GAMMA = 6 * np.pi * ETA * R
-
-KX = 10**-7
-KY = 0.25 * 10**-7
 
 DT = 10e-3
 
@@ -63,12 +60,6 @@ def InertialBrownian(numSteps, T, dT, gamma, m):
     arrayX[0] = 0
     arrayY[0] = 0
 
-    tau = m/gamma
-
-    D = Boltzmann * T / gamma
-
-    arrayX[1] = np.sqrt(2*D/(tau))*dT
-
     for iCoord in range(1, numSteps):
 
         factorOne = (2 + dT * (gamma/m)) / (1 + dT * (gamma/m))
@@ -84,7 +75,7 @@ def InertialBrownian(numSteps, T, dT, gamma, m):
 
 
 
-testX, testY = InertialBrownian(1000, T, DT, GAMMA, M)
+# testX, testY = InertialBrownian(1000, T, 1, GAMMA, M)
 
 
 
@@ -93,32 +84,28 @@ def TrappedBrownian(numSteps, T, dT, gamma, kX, kY):
     arrayX = np.zeros(numSteps)
     arrayY = np.zeros(numSteps)
 
-    # arrayX[0] = 0
-    # arrayY[0] = 0
-
-    factorOneX = kX/gamma * dT
-    factorOneY = kY/gamma * dT
-    factorTwo = np.sqrt(2*Boltzmann * T * dT / gamma)
-
-    arrayX[0] = 0.000004*factorOneX
+    arrayX[0] = 0
+    arrayY[0] = 0
 
     for iCoord in range(1, numSteps): 
 
-        
+        factorOneX = kX/gamma * dT
+        factorOneY = kY/gamma * dT
+        factorTwo = np.sqrt(2*Boltzmann * T * dT / gamma)
 
         arrayX[iCoord] = arrayX[iCoord - 1] - factorOneX * arrayX[iCoord - 1] + factorTwo * np.random.normal(0, 1)        
         arrayY[iCoord] = arrayY[iCoord - 1] - factorOneY * arrayY[iCoord - 1] + factorTwo * np.random.normal(0, 1)
 
     return arrayX, arrayY
 
-
-testX, testY = TrappedBrownian(1000, T, 0.1, GAMMA, KX, KY)
+KX = 10**-6
+KY = 0.25 * 10**-6
+# testX, testY = TrappedBrownian(1000, T, 0.1, GAMMA, KX, KY)
 
 
 
 # plt.plot(testX, testY)
 # plt.scatter(testX[0], testY[0])
-# plt.plot(testX)
 # plt.show()
 # exit()
 
@@ -129,11 +116,11 @@ def EMSD(BrownianFunction, numSteps, iterations):
     for iIteration in range(iterations):
 
         if BrownianFunction == 'overdamped': 
-            arrayX, arrayY = OverdampedBrownian(numSteps, T, DT/1, GAMMA)
+            arrayX, arrayY = OverdampedBrownian(numSteps, T, DT, GAMMA)
         elif BrownianFunction == 'inertial': 
-            arrayX, arrayY = InertialBrownian(numSteps, T, DT/1, GAMMA, M)
+            arrayX, arrayY = InertialBrownian(numSteps, T, DT, GAMMA, M)
         elif BrownianFunction == 'trapped': 
-            arrayX, arrayY = TrappedBrownian(numSteps, T, DT/1, GAMMA, KX, KY)
+            arrayX, arrayY = TrappedBrownian(numSteps, T, DT, GAMMA, KX, KY)
         else: 
             print('No valid function given.')
             return
@@ -146,7 +133,6 @@ def EMSD(BrownianFunction, numSteps, iterations):
 
     return eMSD
 
- 
 
 
 
@@ -177,7 +163,7 @@ def TMSD(BrownianFunction, numSteps, displacementFactor):
     for i in range(trajectoryLenght - displacementFactor):
 
 
-        tempDistance = (arrayX[i] - arrayX[i + displacementFactor])**2 # + (arrayY[i] - arrayY[i + displacementFactor])**2
+        tempDistance = (arrayX[i] - arrayX[i + displacementFactor])**2 #+ (arrayY[i] - arrayY[i + displacementFactor])**2
 
         tMSD += tempDistance
 
@@ -189,18 +175,17 @@ def TMSD(BrownianFunction, numSteps, displacementFactor):
     return tMSD
 
 
-stringOfInterest = 'overdamped'
+stringOfInterest = 'trapped'
 
-# test = EMSD(stringOfInterest, 10, 1000)
-# print(test)
-# test2 = TMSD(stringOfInterest, 10000, 10)
-# print(test2)
+test = EMSD(stringOfInterest, 10, 1000)
+print(test)
+test2 = TMSD(stringOfInterest, 1000, 10)
+print(test2)
 
 # exit()
 
 def GenerateMSDPlot(title): 
-    # stepsList = [10,20,30,40,50,60,70,80,90,100]#, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000]
-    stepsList = [5, 10, 50, 100, 500, 1000, 5000, 10000]
+    stepsList = [10,20,30,40,50,60,70,80,90,100, 200, 300, 400, 500, 600, 700, 800, 900]
     # stepsList = [1, 5, 10, 50, 100, 500, 1000]
     # stepsList = np.arange(0,20)
     # stepsList = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
@@ -217,9 +202,8 @@ def GenerateMSDPlot(title):
     tmsdList = []
 
     for step in range(len(stepsList)): 
-        print('test, ', step)
         msdList.append(EMSD(title, stepsList[step], 1000))
-        tmsdList.append(TMSD(title, 100000, stepsList[step]))
+        tmsdList.append(TMSD(title, 1000000, stepsList[step]))
 
     for i in msdList: 
         print(np.log(i))
@@ -228,25 +212,19 @@ def GenerateMSDPlot(title):
 
     stepsList = 10e-3*np.array(stepsList)
 
-    plt.scatter(stepsList, msdList, label='emsd',s=80, facecolors='none', edgecolors='red')
+    plt.scatter(stepsList, msdList, label='emsd')
     plt.scatter(stepsList, tmsdList, label = 'tmsd', marker= '+')
 
-
-    yTOne = stepsList
     
-    # plt.plot(yTOne, stepsList, label = 't=1')
 
     # plt.loglog(stepsList, msdList, label = 'msd')
     # plt.loglog(stepsList, tmsdList, label = 'tmsd')
     
-    plt.title('Type of Brownian: ' + title)
+    plt.title(title)
     plt.legend()
 
     plt.xscale('log')
     plt.yscale('log')
-
-    plt.xlabel('Seconds')
-    plt.ylabel('MSD')
     
     plt.show()
 

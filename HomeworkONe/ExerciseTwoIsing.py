@@ -93,7 +93,7 @@ def UpdateLattice(numberOfSteps, H, J, T):
 PLOTTING 2D MAP
 '''
 
-lattice = UpdateLattice(1000, 0, 1, 1)
+lattice = UpdateLattice(1000, 0.1, 1, 1)
 sns.heatmap(lattice, cmap='YlGnBu', annot=False)
 plt.title('Number of steps: ' + str(10000))
 plt.show()

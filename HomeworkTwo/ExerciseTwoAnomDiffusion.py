@@ -36,6 +36,15 @@ def CreateRandomWalkRandomTimes(numSteps, T, gamma):
     return positionArray, timeArray
 
 
+positions, times = CreateRandomWalkRandomTimes(50, 300, 1e-7)
+
+# plt.title('Random walk with varying dT')
+# plt.plot(positions, label = 'Random walk')
+
+# plt.show()
+
+
+
 def regularize(x,t,T):
     m = np.diff(x)/np.diff(t)                             # Slopes of the different increments 
     t_r = np.arange(T)                                    # Regular times
@@ -45,14 +54,92 @@ def regularize(x,t,T):
         f = np.where(t_r < t[i+1])[0][-1]                 # Find the end of the segment that the values are to be assigned
         x_r[s:f+1] = x[i] + m[i] * (t_r[s:f+1]-t[i])      # Assign the values of the segment
         s = f+1                                           # Assign the beginning of the next segment 
-    return(x_r)
+    return(x_r, t_r)
+
+
+def Regularize(position, time, T):
+    newTime = np.arange(T)
+    newPosition = np.zeros(T)
+
+    for i in range(T):
+        # go through every element in t 
+        iTime = newTime[i]
+
+        for j in range(len(time)):
+            jTime = time[j]
+            if jTime > iTime: 
+
+                if j == 0:
+                    tPrev = time[j]
+                    tNext = jTime
+
+                    xPrev = position[j]
+                    xNext = position[j]
+
+                    break
+                
+                # in the case that j == i -> tPrev
+                tPrev = time[j-1]
+                tNext = jTime
+
+                xPrev = position[j-1]
+                xNext = position[j]
+
+                break
+
+
+
+        newPosition[i] = xPrev + ( xNext - xPrev ) / ( tNext - tPrev ) * (iTime - tPrev)
+
+    return newPosition, newTime
+            
+
+
 
 position, time = CreateRandomWalkRandomTimes(50, 300, 1e-7)
-regularizedX = regularize(position, time, 300)
+regularizedX, regularizedTime = Regularize(position, time, 300)
 
-plt.scatter(time, position, marker='o', color = 'green')
+# plt.title('Regularized Trajectory')
+# plt.plot(regularizedX)
+
+# plt.show()
+
+
+'''
+Normalize
+'''
+
+def Normalize(positionList): 
+
+    # calculate stdev 
+    std = np.std(positionList)
+
+    # set std to one
+    newPositionList = positionList * (1/std)
+
+
+    mean = np.mean(newPositionList)
+
+    newPositionList = newPositionList - mean
+
+    return newPositionList
+
+    # for iStep in range(1, len(position)): 
+
+
+normalizedPositions = Normalize(regularizedX)
+
+
+
+# plt.scatter(time, position, marker='o', color = 'green')
 
 tTotal = np.arange(len(regularizedX))
-plt.scatter(tTotal, regularizedX, marker='*', color='orange')
+plt.scatter(regularizedTime, regularizedX, marker='*', color='orange')
 plt.plot(time, position, '--')
 plt.show()
+
+
+# plt.plot(regularizedX, label = 'Regularized')
+# plt.plot(normalizedPositions, label = 'Normalized')
+# plt.legend()
+# plt.show()
