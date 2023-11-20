@@ -51,7 +51,7 @@ def OverdampedBrownian(numSteps, T, dT, gamma):
     
     return arrayX, arrayY
 
-# testX, testY = OverdampedBrownian(1000, T, 0.1, GAMMA)
+testX, testY = OverdampedBrownian(1000, T, 0.1, GAMMA)
 
 
 
@@ -112,14 +112,18 @@ def TrappedBrownian(numSteps, T, dT, gamma, kX, kY):
     return arrayX, arrayY
 
 
-testX, testY = TrappedBrownian(1000, T, 0.1, GAMMA, KX, KY)
+# testX, testY = TrappedBrownian(1000, T, 0.1, GAMMA, KX, KY)
 
 
 
 # plt.plot(testX, testY)
-# plt.scatter(testX[0], testY[0])
-# plt.plot(testX)
+# # plt.scatter(testX[0], testY[0])
+# # plt.plot(testX)
+# plt.xlabel('x')
+# plt.ylabel('y')
+# plt.title('Inertial')
 # plt.show()
+
 # exit()
 
 def EMSD(BrownianFunction, numSteps, iterations): 
@@ -189,7 +193,7 @@ def TMSD(BrownianFunction, numSteps, displacementFactor):
     return tMSD
 
 
-stringOfInterest = 'overdamped'
+stringOfInterest = 'inertial'
 
 # test = EMSD(stringOfInterest, 10, 1000)
 # print(test)
@@ -200,7 +204,7 @@ stringOfInterest = 'overdamped'
 
 def GenerateMSDPlot(title): 
     # stepsList = [10,20,30,40,50,60,70,80,90,100]#, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000]
-    stepsList = [5, 10, 50, 100, 500, 1000, 5000, 10000]
+    stepsList = [5, 10, 20, 30, 40, 50, 60, 75, 90, 100, 150, 200, 250, 500]#, 750, 1000, 5000]
     # stepsList = [1, 5, 10, 50, 100, 500, 1000]
     # stepsList = np.arange(0,20)
     # stepsList = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
@@ -245,8 +249,8 @@ def GenerateMSDPlot(title):
     plt.xscale('log')
     plt.yscale('log')
 
-    plt.xlabel('Seconds')
-    plt.ylabel('MSD')
+    plt.xlabel('Time [s]')
+    plt.ylabel('MSD [m]')
     
     plt.show()
 
