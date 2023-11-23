@@ -12,6 +12,10 @@ def PhoreticInteraction(R1, rCutoff, x1, y1, x2, y2, v0):
         # velocity is zero then 
         return 0, 0
 
+    if distance == 0: 
+        # print('distance is zero.')
+        return 0, 0
+
     fraction = distance/R1
 
     # print('fraction:', 1/fraction**2, 'v0: ', v0)
@@ -23,7 +27,7 @@ def PhoreticInteraction(R1, rCutoff, x1, y1, x2, y2, v0):
     # vParticle2 = v0 * R2**2 / distance**2
 
     # calculate angle between vectors 
-    phi = (x1 * x2 + y1 * y2) / (np.sqrt(x1**2 + x2**2) * np.sqrt(y1**2 + y2**2))
+    phi = (x1 * x2 + y1 * y2) / (np.sqrt(x1**2 + y1**2) * np.sqrt(x2**2 + y2**2))
 
     vX = vParticle * np.cos(phi)
     vY = vParticle * np.sin(phi)

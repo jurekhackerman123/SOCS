@@ -10,8 +10,8 @@ Finite difference method:
 
 # these values work for No. 1 
 DR = 0.5
-DT = 0.2e-6
-VELOCITY = 3e-3
+DT = 0.2e-3
+VELOCITY = 1e-3
 dT = 0.01
 
 
@@ -42,17 +42,17 @@ def ActiveBrownianParticle(dT, numSteps, DT, DR, velocity):
 
 # Show on particle 2d trajectory 
 
-# x, y, phi = ActiveBrownianParticle(dT, 500, DT, DR, VELOCITY)
+x, y, phi = ActiveBrownianParticle(dT, 500, DT, DR, VELOCITY)
 
-# plt.plot(x, y)
-# plt.scatter(x[0], y[0], label = 'beginning', color='orange')
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.legend()
-# plt.title('Active Brownian Particle')
-# plt.show()
+plt.plot(x, y)
+plt.scatter(x[0], y[0], label = 'beginning', color='orange')
+plt.xlabel('x [m]')
+plt.ylabel('y [m]')
+plt.legend()
+plt.title('Active Brownian Particle')
+plt.show()
 
-# exit()
+exit()
 
 
 

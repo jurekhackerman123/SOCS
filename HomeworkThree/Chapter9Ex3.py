@@ -56,13 +56,28 @@ def HardSphereCorrection(R, x1, y1, x2, y2):
     return x1New, y1New, x2New, y2New
 
 
-# x1, y1, x2, y2 = HardSphereCorrection(5, 4, 0, 8, 0)
+x1, y1, x2, y2 = HardSphereCorrection(5, 4, 3, 8, 0)
 
 
-# plt.scatter([4, 8], [0, 0], label = 'before')
-# plt.scatter([x1, x2], [y1, y2], label = 'after')
-# plt.legend()
-# plt.show()
+plt.scatter([4, 8], [3, 0], label = 'before')
+plt.scatter([x1, x2], [y1, y2], label = 'after')
+
+plt.title('Demonstration of hard sphere correction, R = 5')
+
+theta = np.linspace( 0 , 2 * np.pi , 150 )
+ 
+ 
+a = 5 * np.cos( theta ) + 6
+b = 5 * np.sin( theta ) + 1.5
+ 
+plt.plot(a, b, color = 'black', label = 'Radius of Particle')
+
+plt.ylabel('y')
+plt.xlabel('x')
+plt.legend()
+plt.show()
+
+exit()
 
 
 
@@ -79,13 +94,13 @@ def CheckBoundaryConditions(x, y):
     '''
     if we're not inside the allowed region, set the values to the boundary values 
     '''
-    if x > XMAX: 
+    if x >= XMAX: 
         x = XMIN
-    elif x < XMIN: 
+    elif x <= XMIN: 
         x = XMAX
-    if y > YMAX: 
+    if y >= YMAX: 
         y = YMIN
-    elif y < YMIN: 
+    elif y <= YMIN: 
         y = YMAX
 
     return x, y
@@ -123,23 +138,24 @@ def SimulateManyParticles(numberOfParticles, R, dT, DT, numSteps, DR, velocity, 
             phi[particle, timeStep]           = phi[particle, timeStep-1] + dT * np.sqrt(2* DR) * np.random.normal(0, 1)
 
             # calculate the x
-            xTrajectories[particle, timeStep] = xTrajectories[particle, timeStep-1] + dT * (velocity * np.cos(phi[particle, timeStep] + velocityArray[particle, 0]) + np.sqrt(2*DT) * np.random.normal(0, 1))
+            xTrajectories[particle, timeStep] = xTrajectories[particle, timeStep-1] + dT * (velocity * np.cos(phi[particle, timeStep])) + dT * velocityArray[particle, 0] + np.sqrt(2*DT) * np.random.normal(0, 1)
 
             # calculate the y
-            yTrajectories[particle, timeStep] = yTrajectories[particle, timeStep-1] + dT * (velocity * np.sin(phi[particle, timeStep] + velocityArray[particle, 1]) + np.sqrt(2*DT) * np.random.normal(0, 1))
+            yTrajectories[particle, timeStep] = yTrajectories[particle, timeStep-1] + dT * (velocity * np.sin(phi[particle, timeStep])) + dT * velocityArray[particle, 1] + np.sqrt(2*DT) * np.random.normal(0, 1)
 
-
+            velocityArray[particle, :] = 0
             # xTrajectories[particle, timeStep], yTrajectories[particle, timeStep] = CheckBoundaryConditions(xTrajectories[particle, timeStep], yTrajectories[particle, timeStep])
 
         
         # after we updated the positions for all particles at this timestep, we can check if some of these particles have to undergo corrections
 
         # set the phoretic velocities to zero again 
-        velocityArray = np.zeros((numberOfParticles, 2))
+        # velocityArray = np.zeros((numberOfParticles, 2))
 
 
         # iterate over particles once more 
         for particle in range(numberOfParticles):
+
             for otherParticle in range(numberOfParticles): 
                 
                 # for the same particle, we do not have to do this
@@ -158,7 +174,7 @@ def SimulateManyParticles(numberOfParticles, R, dT, DT, numSteps, DR, velocity, 
 
 
                 # PHORETIC INTERACTION 
-                vX, vY = PhoreticInteraction(R, 10*R, xTrajectories[particle,timeStep], yTrajectories[particle,timeStep], xTrajectories[otherParticle,timeStep], yTrajectories[otherParticle,timeStep], v0)
+                vX, vY = PhoreticInteraction(R, 5*R, xTrajectories[particle,timeStep], yTrajectories[particle,timeStep], xTrajectories[otherParticle,timeStep], yTrajectories[otherParticle,timeStep], v0)
 
 
                 # now, when it comes to updating the velocities, we have to look at the coordinates 
@@ -192,17 +208,17 @@ XMIN = -50e-3
 XMAX = 50e-3
 YMIN = -50e-3
 YMAX = 50e-3
-NUMBEROFPARTICLES = 50
-DT = 1e-4
+NUMBEROFPARTICLES = 400
+DT = 1e-7
 DR = 1
-VELOCITY = 3e-3
+VELOCITY = 3e-6
 NUMSTEPS = 1000
 
 # for phoretic interaction
-V0 = 50e-3
+V0 = 5000e-3
 
 
-x, y = SimulateManyParticles(NUMBEROFPARTICLES, R, 0.01, DT, NUMSTEPS, DR, VELOCITY, V0) 
+x, y = SimulateManyParticles(NUMBEROFPARTICLES, R, 0.001, DT, NUMSTEPS, DR, VELOCITY, V0) 
 
 
 
@@ -212,11 +228,14 @@ for i in range(NUMBEROFPARTICLES):
     ax.scatter(x[i, -1], y[i,-1], s = 20)
 
 # # plot 1 particle trajectory 
-# ax.plot(x[0, :], y[0,:])
+# ax.plot(x[0, -100:-1], y[0,-100:-1])
 
 # # ax.plot(x[0, :], y[0,:], label = 'particle '+ str(3))
 
-# # ax.legend() 
+# # ax.legend()
+plt.title('Interaction where v0 =' + str(V0 * 10) + ' μm') 
+plt.xlabel('x [m]')
+plt.ylabel('y [m]')
 plt.show()
 
 # exit()
