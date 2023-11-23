@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt 
-
+import random
 '''
 Finite difference method: 
 
@@ -10,7 +10,7 @@ Finite difference method:
 
 # these values work for No. 1 
 DR = 0.5
-DT = 2e-4
+DT = 0.2e-6
 VELOCITY = 3e-3
 dT = 0.01
 
@@ -22,6 +22,8 @@ def ActiveBrownianParticle(dT, numSteps, DT, DR, velocity):
 
     phi         = np.zeros(numSteps)
 
+    phi[0] = random.uniform(0, 2*np.pi)
+
     for iteration in range(1, numSteps): 
 
         # define phi first
@@ -32,18 +34,25 @@ def ActiveBrownianParticle(dT, numSteps, DT, DR, velocity):
         yPosition[iteration] = yPosition[iteration-1] + dT * (velocity * np.sin(phi[iteration]) + np.sqrt(2*DT) * np.random.normal(0, 1))
 
         
+    print(phi)
+    print(np.random.normal(0,1))
 
     return xPosition, yPosition, phi
 
 
+# Show on particle 2d trajectory 
+
 # x, y, phi = ActiveBrownianParticle(dT, 500, DT, DR, VELOCITY)
-# 
+
 # plt.plot(x, y)
-# plt.scatter(x[0], y[0])
+# plt.scatter(x[0], y[0], label = 'beginning', color='orange')
 # plt.xlabel('x')
 # plt.ylabel('y')
+# plt.legend()
 # plt.title('Active Brownian Particle')
 # plt.show()
+
+# exit()
 
 
 
