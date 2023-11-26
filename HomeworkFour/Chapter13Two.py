@@ -9,14 +9,14 @@ from Chapter13One import *
 
 
 
-# I defect, other cooperates
-T = 0 
-# both cooperate
-R = 0.9
-# both defect 
-P = 1      
-# I cooperate, other defects  
-S = 1.5
+# # I defect, other cooperates
+# T = 1
+# # both cooperate
+# R = 1.5
+# # both defect 
+# P = 0   
+# # I cooperate, other defects  
+# S = 0.9
 
 NUMBEROFROUNDS = 7
 
@@ -34,10 +34,10 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
     # lattice = np.zeros((l,l))
 
     lattice = np.full((l,l), numberOfRounds)
-    lattice[10, 10] = 0
+    lattice[int(l/2), int(l/2)] = 0
 
     newLattice = np.full((l,l), numberOfRounds)
-    newLattice[10, 10] = 0
+    newLattice[int(l/2), int(l/2)] = 0
 
 
 
@@ -47,6 +47,13 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
         # iterate over lattice 
         for i in range(l): 
             for j in range(l): 
+
+                neighbours = []
+                yearsList = []
+                bestValue = 0
+                bestIndices = []
+                chosenIndex = 0
+
 
                 # boundary conditions: 
                 if i == 0:
@@ -86,16 +93,23 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
                 yearsList = []
 
                 for neighbour in neighbours: 
-                    yearsList.append(PrisonersDilemma(numberOfRounds, lattice[i, j], neighbour))
+                    yearsList.append(PrisonersDilemma(numberOfRounds, lattice[i, j], neighbour)[1])
+
+
 
                 bestValue = min(yearsList)
 
-                bestIndices = [i for i, value in enumerate(yearsList) if value == bestValue]
+                if PrisonersDilemma(numberOfRounds, lattice[i, j], lattice[i, j])[0] <= bestValue:
+                    print(i, j, 'better in round', timeStep)
+                    newLattice[i, j] = lattice[i, j]
+                else: 
 
-                chosenIndex = random.choice(bestIndices)
+                    bestIndices = [i for i, value in enumerate(yearsList) if value == bestValue]
 
-                # update this value 
-                newLattice[i, j] = neighbours[chosenIndex]
+                    chosenIndex = random.choice(bestIndices)
+
+                    # update this value 
+                    newLattice[i, j] = neighbours[chosenIndex]
                     
 
                 randomNumber = random.random()
@@ -103,6 +117,8 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
                 # mutation
                 if randomNumber < mutationProb: 
                     newLattice[i, j] = random.choice([0, numberOfRounds])
+
+            print(newLattice)
     
 
 
@@ -114,9 +130,9 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
 
 #     for timeStep in range(timeSteps): 
 
-TIME = 1
+TIME = 10
 
-lattice = LatticeOfPrisoners(TIME, 20, 10, MUTATIONPROB)
+lattice = LatticeOfPrisoners(TIME, 10, NUMBEROFROUNDS, MUTATIONPROB)
 # print(np.shape(lattice))
 
 print(lattice)

@@ -12,13 +12,13 @@ Simulate Prisoners Dilemma for a number of rounds and calculate the accumulated 
 # global Variables 
 N = 10 
 # I defect, other cooperates
-T = 0 
+T = 0
 # both cooperate
-R = 0.99
+R = 0.9
 # both defect 
-P = 1      
+P = 1  
 # I cooperate, other defects  
-S = 1.01
+S = 1.5
 
 
 def PrisonersDilemma(numberOfRounds, n, m): 
@@ -30,12 +30,12 @@ def PrisonersDilemma(numberOfRounds, n, m):
 
 
         if round > n or (np.isin(0, playerM[:round])).any():
-            print('test')
+            # print('test')
             playerN[round] = 0
 
 
         if round > m or (np.isin(0, playerN[:round])).any():
-            print('test')
+            # print('test')
             playerM[round] = 0
 
 
@@ -60,14 +60,14 @@ def PrisonersDilemma(numberOfRounds, n, m):
                 yearsInPrisonN += P
                 yearsInPrisonM += P
             elif playerM[round] == 1: 
-                yearsInPrisonN += 0 
+                yearsInPrisonN += T
                 yearsInPrisonM += S
         
         elif playerN[round] == 1: 
 
             if playerM[round] == 0: 
                 yearsInPrisonN += S
-                yearsInPrisonM += 0
+                yearsInPrisonM += T
             elif playerM[round] == 1: 
                 yearsInPrisonN += R
                 yearsInPrisonM += R
@@ -109,7 +109,7 @@ def PrisonersDilemma(numberOfRounds, n, m):
 
 
 # create plot m vs n 
-NUMBEROFROUNDS = 10
+# NUMBEROFROUNDS = 10
 
 # lattice = np.zeros((NUMBEROFROUNDS, NUMBEROFROUNDS))
 
