@@ -59,40 +59,31 @@ def HardSphereCorrection(R, x1, y1, x2, y2):
 x1, y1, x2, y2 = HardSphereCorrection(5, 4, 3, 8, 0)
 
 
-plt.scatter([4, 8], [3, 0], label = 'before')
-plt.scatter([x1, x2], [y1, y2], label = 'after')
+# plt.scatter([4, 8], [3, 0], label = 'before')
+# plt.scatter([x1, x2], [y1, y2], label = 'after')
 
-plt.title('Demonstration of hard sphere correction, R = 5')
+# plt.title('Demonstration of hard sphere correction, R = 5')
 
-theta = np.linspace( 0 , 2 * np.pi , 150 )
+# theta = np.linspace( 0 , 2 * np.pi , 150 )
  
  
-a = 5 * np.cos( theta ) + 6
-b = 5 * np.sin( theta ) + 1.5
+# a = 5 * np.cos( theta ) + 6
+# b = 5 * np.sin( theta ) + 1.5
  
-plt.plot(a, b, color = 'black', label = 'Radius of Particle')
+# plt.plot(a, b, color = 'black', label = 'Radius of Particle')
 
-plt.ylabel('y')
-plt.xlabel('x')
-plt.legend()
-plt.show()
+# plt.ylabel('y')
+# plt.xlabel('x')
+# plt.legend()
+# plt.show()
 
-exit()
+# exit()
 
-
-
-'''
-Do we have to put their initial positions randomly??
-
-Is my approach correct??
-
-How are we supposed to visualize this??? Animation??
-'''
 
 
 def CheckBoundaryConditions(x, y): 
     '''
-    if we're not inside the allowed region, set the values to the boundary values 
+    if we're not inside the allowed region, set the values to the boundary values according to periodical boundary conditions
     '''
     if x >= XMAX: 
         x = XMIN
@@ -208,14 +199,14 @@ XMIN = -50e-3
 XMAX = 50e-3
 YMIN = -50e-3
 YMAX = 50e-3
-NUMBEROFPARTICLES = 400
+NUMBEROFPARTICLES = 50
 DT = 1e-7
 DR = 1
 VELOCITY = 3e-6
 NUMSTEPS = 1000
 
 # for phoretic interaction
-V0 = 5000e-3
+V0 = 50e-3
 
 
 x, y = SimulateManyParticles(NUMBEROFPARTICLES, R, 0.001, DT, NUMSTEPS, DR, VELOCITY, V0) 
@@ -233,7 +224,7 @@ for i in range(NUMBEROFPARTICLES):
 # # ax.plot(x[0, :], y[0,:], label = 'particle '+ str(3))
 
 # # ax.legend()
-plt.title('Interaction where v0 =' + str(V0 * 10) + ' μm') 
+plt.title('Interaction where v0 =' + str(V0 * 1000) + ' μm') 
 plt.xlabel('x [m]')
 plt.ylabel('y [m]')
 plt.show()
@@ -310,4 +301,4 @@ def AnimateTrajectory(x, y):
     plt.show
 
 
-# AnimateTrajectory(x, y)
+AnimateTrajectory(x, y)

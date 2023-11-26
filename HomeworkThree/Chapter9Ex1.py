@@ -34,8 +34,8 @@ def ActiveBrownianParticle(dT, numSteps, DT, DR, velocity):
         yPosition[iteration] = yPosition[iteration-1] + dT * (velocity * np.sin(phi[iteration]) + np.sqrt(2*DT) * np.random.normal(0, 1))
 
         
-    print(phi)
-    print(np.random.normal(0,1))
+    # print(phi)
+    # print(np.random.normal(0,1))
 
     return xPosition, yPosition, phi
 
@@ -44,15 +44,15 @@ def ActiveBrownianParticle(dT, numSteps, DT, DR, velocity):
 
 x, y, phi = ActiveBrownianParticle(dT, 500, DT, DR, VELOCITY)
 
-plt.plot(x, y)
-plt.scatter(x[0], y[0], label = 'beginning', color='orange')
-plt.xlabel('x [m]')
-plt.ylabel('y [m]')
-plt.legend()
-plt.title('Active Brownian Particle')
-plt.show()
+# plt.plot(x, y)
+# plt.scatter(x[0], y[0], label = 'beginning', color='orange')
+# plt.xlabel('x [m]')
+# plt.ylabel('y [m]')
+# plt.legend()
+# plt.title('Active Brownian Particle')
+# plt.show()
 
-exit()
+# exit()
 
 
 
@@ -142,4 +142,4 @@ def PlotMSDs():
 
     plt.show()
 
-# PlotMSDs()
+PlotMSDs()

@@ -16,6 +16,7 @@ def PhoreticInteraction(R1, rCutoff, x1, y1, x2, y2, v0):
         # print('distance is zero.')
         return 0, 0
 
+    v0 = v0 * 100
     fraction = distance/R1
 
     # print('fraction:', 1/fraction**2, 'v0: ', v0)
