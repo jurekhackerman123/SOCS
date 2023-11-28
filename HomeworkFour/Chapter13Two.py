@@ -33,12 +33,14 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
     # lattice = np.random.choice([0, numberOfRounds], (l, l))
     # lattice = np.zeros((l,l))
 
-    lattice = np.full((l,l), numberOfRounds)
+    # lattice = np.full((l+1,l+1), numberOfRounds) - 1
+    lattice = np.ones((l, l))* numberOfRounds
     lattice[int(l/2), int(l/2)] = 0
 
-    newLattice = np.full((l,l), numberOfRounds)
-    newLattice[int(l/2), int(l/2)] = 0
+    # newLattice = np.full((l,l), numberOfRounds)
+    # newLattice[int(l/2), int(l/2)] = 0
 
+    newLattice = lattice.copy()
 
 
     for timeStep in range(timeSteps): 
@@ -46,6 +48,7 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
 
         # iterate over lattice 
         for i in range(l): 
+
             for j in range(l): 
 
                 neighbours = []
@@ -100,7 +103,7 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
                 bestValue = min(yearsList)
 
                 if PrisonersDilemma(numberOfRounds, lattice[i, j], lattice[i, j])[0] <= bestValue:
-                    print(i, j, 'better in round', timeStep)
+                    # print(i, j, 'better in round', timeStep)
                     newLattice[i, j] = lattice[i, j]
                 else: 
 
@@ -118,7 +121,7 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
                 if randomNumber < mutationProb: 
                     newLattice[i, j] = random.choice([0, numberOfRounds])
 
-            print(newLattice)
+            # print(newLattice)
     
 
 
@@ -130,19 +133,17 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
 
 #     for timeStep in range(timeSteps): 
 
-TIME = 10
+TIME = 20
 
-lattice = LatticeOfPrisoners(TIME, 10, NUMBEROFROUNDS, MUTATIONPROB)
-# print(np.shape(lattice))
+lattice = LatticeOfPrisoners(TIME, L, NUMBEROFROUNDS, MUTATIONPROB)
 
-print(lattice)
+
+print(T, R, P, S)
+
+# PLOT
 
 ax = sns.heatmap(lattice, cmap='viridis', annot=False)
-
 plt.title('Prisoners Dilemma on a lattice, t = ' + str(TIME))
-
-# Show the plot
-# ax.invert_yaxis()
 plt.xlabel('x')
 plt.ylabel('y')
 plt.show()

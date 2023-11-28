@@ -10,7 +10,7 @@ Simulate Prisoners Dilemma for a number of rounds and calculate the accumulated 
 
 
 # global Variables 
-N = 10 
+N = 7
 # I defect, other cooperates
 T = 0
 # both cooperate
@@ -76,6 +76,19 @@ def PrisonersDilemma(numberOfRounds, n, m):
 
 
     return yearsInPrisonN, yearsInPrisonM
+
+
+
+
+
+# TEST
+# print(PrisonersDilemma(N, N, N)[0])
+# print(PrisonersDilemma(N, N, 0)[0])
+# print(PrisonersDilemma(N, 0, N)[0])
+# print(PrisonersDilemma(N, 0, 0)[0])
+
+
+
 
 
 # first plot
