@@ -20,7 +20,7 @@ from Chapter13One import *
 
 NUMBEROFROUNDS = 7
 
-MUTATIONPROB = 0
+MUTATIONPROB = 0.01
 
 L = 30
 
@@ -36,17 +36,17 @@ def PeriodicBoundaryConditions(array, row, col):
 def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb): 
 
     # create lxl array with random integers between 0 and N 
-    # lattice = np.random.choice([0, numberOfRounds], (l, l))
+    lattice = np.random.choice([0, numberOfRounds], (l, l))
     # lattice = np.zeros((l,l))
 
     # lattice = np.full((l+1,l+1), numberOfRounds) - 1
-    lattice = np.ones((l, l))* numberOfRounds
+    # lattice = np.ones((l, l))* numberOfRounds
     # lattice = np.zeros((l,l))
 
     # 
-    lattice[int(3*l/4), int(l/4)] = 0
-    lattice[int(l/4), int(3*l/4)] = 0
-    lattice[int(l/2), int(l/2)] = 0
+    # lattice[int(3*l/4), int(l/4)] = 0
+    # lattice[int(l/4), int(3*l/4)] = 0
+    # lattice[int(l/2), int(l/2)] = 0
 
     # lattice[int(l/2), int(l/2)] = numberOfRounds
 

@@ -14,7 +14,7 @@ N = 7
 # I defect, other cooperates
 T = 0
 # both cooperate
-R = 0.9
+R = 0.6
 # both defect 
 P = 1  
 # I cooperate, other defects  

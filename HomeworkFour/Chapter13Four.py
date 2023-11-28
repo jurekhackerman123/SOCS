@@ -20,7 +20,7 @@ from Chapter13One import *
 
 NUMBEROFROUNDS = 7
 
-MUTATIONPROB = 0
+MUTATIONPROB = 0.01
 
 L = 30
 
@@ -36,22 +36,25 @@ def PeriodicBoundaryConditions(array, row, col):
 def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb): 
 
     # create lxl array with random integers between 0 and N 
-    # lattice = np.random.choice([0, numberOfRounds], (l, l))
+    lattice = np.random.randint(0, numberOfRounds, (l, l))
     # lattice = np.zeros((l,l))
 
+
+    print(lattice)
     # lattice = np.full((l+1,l+1), numberOfRounds) - 1
-    lattice = np.ones((l, l))* numberOfRounds
+    # lattice = np.ones((l, l))* numberOfRounds
     # lattice = np.zeros((l,l))
 
     # 
-    lattice[int(3*l/4), int(l/4)] = 0
-    lattice[int(l/4), int(3*l/4)] = 0
-    lattice[int(l/2), int(l/2)] = 0
+    # lattice[int(3*l/4), int(l/4)] = 0
+    # lattice[int(l/4), int(3*l/4)] = 0
+    # lattice[int(l/2), int(l/2)] = 0
 
     # lattice[int(l/2), int(l/2)] = numberOfRounds
 
     newLattice = lattice.copy()
 
+    latticeListToPlot = []
 
     for timeStep in range(timeSteps): 
         # lattice = newLattice.copy()
@@ -102,7 +105,7 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
 
                 # mutation
                 if randomNumber < mutationProb: 
-                    newLattice[i, j] = random.choice([0, numberOfRounds])
+                    newLattice[i, j] = random.randint(0, numberOfRounds)
 
                 # print(newLattice)
     
@@ -144,9 +147,9 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
 
         # print(lattice)
                 
+        latticeListToPlot.append(lattice.copy())
 
-
-    return lattice
+    return lattice, latticeListToPlot
 
 
 # def MainAlg(timeSteps): 
@@ -155,7 +158,7 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
 
 TIME = 20
 
-lattice = LatticeOfPrisoners(TIME, 30, NUMBEROFROUNDS, MUTATIONPROB)
+lattice, latticeListToPlot = LatticeOfPrisoners(TIME, 30, NUMBEROFROUNDS, MUTATIONPROB)
 
 
 print(T, R, P, S)
@@ -163,7 +166,49 @@ print(T, R, P, S)
 # PLOT
 
 ax = sns.heatmap(lattice, cmap='viridis', annot=False)
-plt.title('Prisoners Dilemma on a lattice, t = ' + str(TIME))
+plt.title('Prisoners Dilemma on a lattice, t = ' + str(TIME) + ', R = ' + str(R))
 plt.xlabel('x')
 plt.ylabel('y')
 plt.show()
+
+# can (and should) also add the populationfraction plot here
+
+pop0 = []
+pop1 = []
+pop2 = []
+pop3 = []
+pop4 = []
+pop5 = []
+pop6 = []
+
+
+print('test: ', len(latticeListToPlot))
+
+for latticeNo in range(len(latticeListToPlot)): 
+    latticeOfInterest = latticeListToPlot[latticeNo]
+
+    # print(latticeListToPlot[latticeNo] == latticeListToPlot[latticeNo + 1])
+
+    integersToCount = [0,1,2,3,4,5,6]
+    counts = [np.count_nonzero(latticeOfInterest == i) for i in integersToCount]
+
+    pop0.append(counts[0] / sum(counts))
+    pop1.append(counts[1] / sum(counts))
+    pop2.append(counts[2] / sum(counts))
+    pop3.append(counts[3] / sum(counts))
+    pop4.append(counts[4] / sum(counts))
+    pop5.append(counts[5] / sum(counts))
+    pop6.append(counts[6] / sum(counts))
+
+plt.plot(pop0, label = 'pop0')
+plt.plot(pop1, label = 'pop1')
+plt.plot(pop2, label = 'pop2')
+plt.plot(pop3, label = 'pop3')
+plt.plot(pop4, label = 'pop4')
+plt.plot(pop5, label = 'pop5')
+plt.plot(pop6, label = 'pop6')
+plt.xlabel('Time')
+plt.ylabel('Population Fraction')
+plt.legend()
+plt.show()
+
