@@ -14,7 +14,7 @@ N = 7
 # I defect, other cooperates
 T = 0
 # both cooperate
-R = 0.6
+R = 1.5
 # both defect 
 P = 1  
 # I cooperate, other defects  
@@ -122,27 +122,28 @@ def PrisonersDilemma(numberOfRounds, n, m):
 
 
 # create plot m vs n 
-# NUMBEROFROUNDS = 10
+NUMBEROFROUNDS = 10
 
-# lattice = np.zeros((NUMBEROFROUNDS, NUMBEROFROUNDS))
+lattice = np.zeros((NUMBEROFROUNDS, NUMBEROFROUNDS))
 
-# for i in range(NUMBEROFROUNDS): 
-#     for j in range(NUMBEROFROUNDS): 
+for i in range(NUMBEROFROUNDS): 
+    for j in range(NUMBEROFROUNDS): 
 
-#         lattice[i, j], forget = PrisonersDilemma(NUMBEROFROUNDS, i, j)
+        lattice[i, j], forget = PrisonersDilemma(NUMBEROFROUNDS, i, j)
 
 
 
 # Plot heatmap
 
-# ax = sns.heatmap(lattice, cmap='viridis', annot=True, fmt=".2f", cbar_kws={'label': 'Color Scale'})
-# 
+ax = sns.heatmap(lattice, cmap='viridis', annot=True, fmt=".2f", cbar_kws={'label': 'Color Scale'})
+
 # Show the plot
-# ax.invert_yaxis()
-# plt.xlabel('m')
-# plt.ylabel('n')
-# plt.plot([1,2,3,4,5,6,7,8,9, 10], [0,1,2,3,4,5,6,7,8, 9], linestyle='--', color = 'black')
-# plt.show()
+ax.invert_yaxis()
+plt.xlabel('m')
+plt.ylabel('n')
+plt.plot([1,2,3,4,5,6,7,8,9, 10], [0,1,2,3,4,5,6,7,8, 9], linestyle='--', color = 'black')
+plt.title('Years in Prison')
+plt.show()
 
 
 

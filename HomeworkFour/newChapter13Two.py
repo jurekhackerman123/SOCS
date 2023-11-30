@@ -44,11 +44,18 @@ def LatticeOfPrisoners(timeSteps, l, numberOfRounds, mutationProb):
     # lattice = np.zeros((l,l))
 
     # 
-    lattice[int(3*l/4), int(l/4)] = 0
-    lattice[int(l/4), int(3*l/4)] = 0
+    # lattice[int(3*l/4), int(l/4)] = 0
+    # lattice[int(l/4), int(3*l/4)] = 0
+    # lattice[int(l/2), int(l/2)] = 0
+
+    # lattice[int(2*l/3), int(l/3)] = 0
+    # lattice[int(l/3), int(2*l/3)] = 0
+
+
     lattice[int(l/2), int(l/2)] = 0
 
-    # lattice[int(l/2), int(l/2)] = numberOfRounds
+    # cluster 
+    # lattice[int(3/6 * l): int(2/3 * l), int(3/6 * l) : int(2/3 * l)] = 0
 
     newLattice = lattice.copy()
 
